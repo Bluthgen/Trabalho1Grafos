@@ -51,10 +51,10 @@ public class GrafoMA{
     
     public void mostrarGrafo(){
         for(int i= 0; i < numVertices; i++){
-            System.out.print((i+1));
+            System.out.print((i));
             for(int j= 0; j < numVertices; j++){
                 if(matriz[i][j] < Double.POSITIVE_INFINITY){
-                    System.out.print("->" + (j+1));
+                    System.out.print("->" + (j));
                 }
             }
             System.out.print("\n");

@@ -75,9 +75,9 @@ public class GrafosPratica1 {
         }
     }
     
-    public static void FW(String[] args) throws IOException{
+    public static void FW() throws IOException{
         GrafoMA grafo= new GrafoMA();
-        readLargerTextFileFW(Paths.get("").toAbsolutePath().toString() + "\\src\\grafosPratica1\\grafo_500.dat", grafo);
+        readLargerTextFileFW(Paths.get("").toAbsolutePath().toString() + "\\src\\grafosPratica1\\grafo_10.dat", grafo);
         grafo.mostrarGrafo();
         grafo.floydWarshall();
         grafo.mostrarCustos();
@@ -85,7 +85,7 @@ public class GrafosPratica1 {
     
     public static void D() throws IOException{
         GrafoLA grafo= new GrafoLA();
-        //readLargerTextFile(Paths.get("").toAbsolutePath().toString() + "\\src\\grafosPratica1\\grafo_500.dat", grafo);
+        readLargerTextFile(Paths.get("").toAbsolutePath().toString() + "\\src\\grafosPratica1\\grafo_10.dat", grafo);
         grafo.mostrarGrafo();
         //grafo.dijkstra();
         //grafo.mostrarCustos();
@@ -100,8 +100,8 @@ public class GrafosPratica1 {
     }
     
     public static void main(String[] args) throws IOException{
-        //D();
-        FW(args);
+        D();
+        //FW();
         //BF();
     }
     
