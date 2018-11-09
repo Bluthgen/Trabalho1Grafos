@@ -5,46 +5,60 @@ package grafosPratica1;
 import java.util.*;
 
 public class GrafoLA extends Grafo{
-    private Map<Vertice, List<Aresta>> vertices;
+    private Map<Integer, Map.Entry<Vertice, List<Aresta>>> vertices;
 
     public GrafoLA() {
         vertices = new HashMap();
     }
 
     public boolean existeVertice(Integer v){
+        /*
         for(Vertice vertice: vertices.keySet())
             if(vertice.id.equals(v))
                 return true;
         return false;
+        */
+        if(vertices.get(v) != null){
+            return true;
+        }
+        return false;
     }
     
     public Vertice getVertice(Integer v){
+        /*
         for(Vertice vertice: vertices.keySet())
             if(vertice.id.equals(v))
                 return vertice;
         return null;
+        */
+        return vertices.get(v).getKey();
     }
     
     public void mostrarGrafo(){
-        for(Vertice v : vertices.keySet()){
+        Vertice v;
+        for(Map.Entry<Vertice, List<Aresta>> e : vertices.values()){
+            v= e.getKey();
             System.out.print(v.id);
-            for(Aresta adj : vertices.get(v)){
+            for(Aresta adj : e.getValue()){
                 System.out.print("->"+adj.vertice+"("+adj.peso+")");
             }
             //System.out.println(" Grau:"+calculaGrau(v));
             System.out.print("\n");
         }
+
     }
 
     public void mostrarCustos(){
-        for(Vertice v : vertices.keySet()){
+        Vertice v;
+        for(Map.Entry<Vertice, List<Aresta>> e : vertices.values()){
+            v= e.getKey();
             System.out.println(v.id+" - "+v.d);
         }
     }
     
     public void insereVertice(Integer v){
         for(int i= 0; i<v; i++){
-            vertices.put(new Vertice(i), new ArrayList<>());
+            vertices.put(i, new AbstractMap.SimpleEntry(new Vertice(i), new ArrayList<>()));
         }
         /*
         if(!existeVertice(v)){
@@ -55,7 +69,7 @@ public class GrafoLA extends Grafo{
     
     public boolean existeAresta(Integer u, Integer v){
         if(existeVertice(u)){
-            for(Aresta adj : vertices.get(getVertice(u))){
+            for(Aresta adj : vertices.get(u).getValue()){
                 if(adj.vertice.equals(v)){
                     return true;
                 }
@@ -66,7 +80,7 @@ public class GrafoLA extends Grafo{
     
     public void insereAresta(Integer u, Integer v, Double peso){
         if(existeVertice(u) && existeVertice(v)){
-            vertices.get(getVertice(u)).add(new Aresta(v, peso));
+            vertices.get(u).getValue().add(new Aresta(v, peso));
         }
     }
     
@@ -99,16 +113,17 @@ public class GrafoLA extends Grafo{
     
     public void removeVertice(Integer v){
         if(existeVertice(v)){
-            for(Vertice adj : vertices.keySet()){
-                removeAresta(adj.id, v);
+            for(Map.Entry<Vertice, List<Aresta>> e : vertices.values()){
+                for(Aresta a : e.getValue())
+                removeAresta(a.vertice, v);
             }
-            vertices.remove(getVertice(v));
+            vertices.remove(v);
         }
     }
 
     public void removeAresta(Integer u, Integer v){
         if(existeAresta(u, v)){
-            vertices.get(getVertice(u)).remove(v);
+            vertices.get(u).getValue().remove(v);
         }
     }
     
@@ -139,8 +154,10 @@ public class GrafoLA extends Grafo{
         while(!fila.isEmpty()){
             atual= fila.remove();
             //verificado.add(atual);
-            for(Aresta a : vertices.get(atual)){
-                relax(atual.id , a.vertice, a.peso);
+            if(vertices.get(atual.id) != null) {
+                for (Aresta a : vertices.get(atual.id).getValue()) {
+                    relax(atual.id, a.vertice, a.peso);
+                }
             }
         }
     }

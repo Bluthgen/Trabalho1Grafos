@@ -90,7 +90,7 @@ public class GrafosPratica1 {
     public static void D() throws IOException{
         GrafoLA grafo= new GrafoLA();
         readLargerTextFile(Paths.get("").toAbsolutePath().toString() + "\\src\\grafosPratica1\\grafo_500.dat", grafo);
-        //grafo.mostrarGrafo();
+        grafo.mostrarGrafo();
         grafo.dijkstra(0);
         grafo.mostrarCustos();
     }
