@@ -17,7 +17,7 @@ public class GrafosPratica1 {
         System.out.println(String.valueOf(msg));
     }
     
-    static void readLargerTextFileFW(String fileName, GrafoMA grafo) throws IOException {
+    static void readLargerTextFile(String fileName, Grafo grafo) throws IOException {
         Path path = Paths.get(fileName);
         String linha= "", anterior;
         boolean arestas= false;
@@ -39,12 +39,12 @@ public class GrafosPratica1 {
                 u= Integer.parseInt(pedacos[0]);
                 v= Integer.parseInt(pedacos[1]);
                 peso= Double.parseDouble(pedacos[2]);
-                grafo.insereAresta(u+1,v+1,peso);
+                grafo.insereAresta(u,v,peso);
             }      
         }
     }
     
-    static void readLargerTextFile(String fileName, Grafo grafo) throws IOException {
+    static void readLargerTextFileD(String fileName, GrafoLA grafo) throws IOException {
         Path path = Paths.get(fileName);
         String linha= "", anterior;
         boolean arestas= false;
@@ -55,14 +55,17 @@ public class GrafosPratica1 {
             while (scanner.hasNextLine()){
                 linha= scanner.nextLine();
                 if(linha.contains("#vertices")){
+                    //System.out.println("Vertices:");
                     continue;
                 }
                 if(linha.contains("#arestas")){
+                    //System.out.println("Arestas:");
                     arestas= true;
                     continue;
                 }
                 if(!arestas){
-                    grafo.insereVertice(Integer.parseInt(linha) + 1);
+                    grafo.insereVertice(Integer.parseInt(linha));
+                    //System.out.println("V-"+linha);
                     continue;
                 }
                     
@@ -70,33 +73,34 @@ public class GrafosPratica1 {
                 u= Integer.parseInt(pedacos[0]);
                 v= Integer.parseInt(pedacos[1]);
                 peso= Double.parseDouble(pedacos[2]);
-                grafo.insereAresta(u+1,v+1,peso);
+                //System.out.println("A-:"+u+", "+v+" - "+peso);
+                grafo.insereAresta(u,v,peso);
             }      
         }
     }
     
     public static void FW() throws IOException{
         GrafoMA grafo= new GrafoMA();
-        readLargerTextFileFW(Paths.get("").toAbsolutePath().toString() + "\\src\\grafosPratica1\\grafo_10.dat", grafo);
-        grafo.mostrarGrafo();
+        readLargerTextFile(Paths.get("").toAbsolutePath().toString() + "\\src\\grafosPratica1\\grafo_500.dat", grafo);
+        //grafo.mostrarGrafo();
         grafo.floydWarshall();
         grafo.mostrarCustos();
     }
     
     public static void D() throws IOException{
         GrafoLA grafo= new GrafoLA();
-        readLargerTextFile(Paths.get("").toAbsolutePath().toString() + "\\src\\grafosPratica1\\grafo_10.dat", grafo);
-        grafo.mostrarGrafo();
-        //grafo.dijkstra();
-        //grafo.mostrarCustos();
+        readLargerTextFile(Paths.get("").toAbsolutePath().toString() + "\\src\\grafosPratica1\\grafo_500.dat", grafo);
+        //grafo.mostrarGrafo();
+        grafo.dijkstra(0);
+        grafo.mostrarCustos();
     }
     
     public static void BF() throws IOException{
         GrafoLVLA grafo= new GrafoLVLA();
-        //readLargerTextFile(Paths.get("").toAbsolutePath().toString() + "\\src\\grafosPratica1\\grafo_500.dat", grafo);
-        grafo.mostrarGrafo();
-        //grafo.bellmanFord();
-        //grafo.mostrarCustos();
+        readLargerTextFile(Paths.get("").toAbsolutePath().toString() + "\\src\\grafosPratica1\\grafo_500.dat", grafo);
+        //grafo.mostrarGrafo();
+        grafo.bellmanFord(0);
+        grafo.mostrarCustos();
     }
     
     public static void main(String[] args) throws IOException{

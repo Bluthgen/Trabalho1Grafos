@@ -5,35 +5,74 @@ import java.util.List;
 import java.util.Objects;
 
 public class GrafoLVLA extends Grafo{
-    private List<Integer> vertices;
+    //private List<Vertice> vertices;
+    private Vertice[] vertices;
+    private int numVerices;
     private List<Aresta> arestas;
 
     public GrafoLVLA() {
-        vertices= new ArrayList<>();
+        //vertices= new ArrayList<>();
+        numVerices= 0;
         arestas= new ArrayList<>();
     }
     
     public boolean existeVertice(Integer v){
-        int indice= vertices.indexOf(v);
-        return indice>=0;
+        /*
+        for(Vertice iterator: vertices){
+            if(iterator.id.equals(v))
+                return true;
+        }
+        return false;
+        */
+        return v < numVerices;
     }
-    
+
+    public Vertice getVertice(Integer v){
+        /*
+        for(Vertice iterator: vertices){
+            if(iterator.id.equals(v))
+                return iterator;
+        }
+        return null;
+        */
+        if(existeVertice(v)){
+            return vertices[v];
+        }
+        return null;
+    }
+
     public void mostrarGrafo(){
-        for(Integer v : vertices){
-            System.out.print(v);
+        /*for(Vertice v : vertices){
+            System.out.print(v.id);
             for(Aresta adj : arestas){
-                if(adj.u == v)
+                if(adj.u.equals(v.id))
                     System.out.print("->"+adj.v+"("+adj.peso+")");
             }
             //System.out.println(" Grau:"+calculaGrau(v));
             System.out.print("\n");
         }
+        */
+        for(int i=0; i<numVerices; i++){
+            for(Aresta a: arestas){
+                if(a.u.equals(vertices[i].id))
+                    System.out.println("->"+a.v+"("+a.peso+")");
+            }
+        }
     }
     
     public void insereVertice(Integer v){
-        if(!existeVertice(v)){
-            vertices.add(v);
+        vertices= new Vertice[v];
+        numVerices= v;
+        for(int i= 0; i<numVerices; i++){
+            vertices[i]= new Vertice(i);
         }
+        /*
+        if(!existeVertice(v)){
+            //vertices.add(new Vertice(v));
+            vertices[v]= new Vertice(v);
+            numVerices++;
+        }
+        */
     }
     
     public boolean existeAresta(Integer u, Integer v){
@@ -43,36 +82,86 @@ public class GrafoLVLA extends Grafo{
     public void insereAresta(Integer u, Integer v, Double peso){
         if(existeVertice(u) && existeVertice(v)){
             arestas.add(new Aresta(u, v, peso));
+            //System.out.println("Inserido "+ u + ", " + v);
         }
     }
-    
+
     public void removeVertice(Integer v){
         if(existeVertice(v)){
             arestas.stream().filter((adj) -> (Objects.equals(adj.u, v) || Objects.equals(adj.v, v))).forEachOrdered((adj) -> {
                 removeAresta(adj.u, adj.v);
             });
-            vertices.remove(v);
+            //vertices.remove(v.intValue());
         }
     }
 
     public void removeAresta(Integer u, Integer v){
         for(Aresta a: arestas){
-            if(a.u == u && a.v == v){
+            if(a.u.equals(u) && a.v.equals(v)){
                 arestas.remove(a);
                 return;
             }
         }
     }
-    
+
+    public void mostrarCustos(){
+        for(int i=0; i<numVerices; i++){//for(Vertice v: vertices){
+            System.out.println("V: "+vertices[i].id+" - "+vertices[i].d);
+        }
+    }
+
+    public void initMinPath(Integer u){
+        Vertice vert= getVertice(u);
+        vert.d = 0.0;
+    }
+
+
+    public void relax(Integer u, Integer v, Double w){
+        Vertice vertU= getVertice(u);
+        Vertice vertV= getVertice(v);
+        if(vertV.d > vertU.d + w){
+            vertV.d = vertU.d + w;
+            vertV.pred = u;
+        }
+    }
+
+    public boolean bellmanFord(Integer s){
+        initMinPath(s);
+        for(int i= 0; i<vertices.length; i++){
+            for(Aresta a : arestas){
+                relax(a.u, a.v, a.peso);
+            }
+        }
+        for(Aresta a : arestas){
+            if(getVertice(a.v).d > (getVertice(a.u).d + a.peso)){
+                return false;
+            }
+        }
+        return true;
+    }
     
     private class Aresta {
         Integer u, v;
         Double peso;
         
-        public Aresta(Integer u, Integer v, Double peso){
+        Aresta(Integer u, Integer v, Double peso){
             this.u= u;
             this.v= v;
             this.peso= peso;
         }
+    }
+
+    private class Vertice{
+        Integer id;
+        Double d;
+        Integer pred;
+
+        Vertice(Integer id) {
+            this.id = id;
+            this.d = Double.POSITIVE_INFINITY;
+            this.pred = null;
+        }
+
+
     }
 }

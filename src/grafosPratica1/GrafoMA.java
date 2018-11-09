@@ -1,6 +1,6 @@
 package grafosPratica1;
 
-public class GrafoMA{
+public class GrafoMA extends Grafo{
     private Double[][] matriz;
     private int numVertices;
     
@@ -43,7 +43,7 @@ public class GrafoMA{
     
     public boolean existeAresta(Integer u, Integer v){
         if(existeVertice(u) && existeVertice(v)){
-            if(matriz[u-1][v-1] < Double.POSITIVE_INFINITY)
+            if(matriz[u][v] < Double.POSITIVE_INFINITY)
                 return true;
         }
         return false;
@@ -64,25 +64,25 @@ public class GrafoMA{
     public void mostrarCustos(){
         for(int i= 0; i < numVertices; i++){
             for(int j= 0; j < numVertices; j++){
-                System.out.println((i+1) + "->" + (j+1)+": "+custos[i][j]);
+                System.out.println((i) + "->" + (j)+": "+custos[i][j]);
             }
         }
     }
     
     public void insereAresta(Integer u, Integer v, Double peso){
         if(existeVertice(u) && existeVertice(v)){
-            if(matriz[u-1][v-1] < Double.POSITIVE_INFINITY){
+            if(matriz[u][v] < Double.POSITIVE_INFINITY){
                 return;
             }
-            matriz[u-1][v-1]= peso;
-            custos[u-1][v-1]= peso;
+            matriz[u][v]= peso;
+            custos[u][v]= peso;
         }
     }
     
     public void removeAresta(Integer u, Integer v){
         if(existeVertice(u) && existeVertice(v)){
-            matriz[u-1][v-1]= Double.POSITIVE_INFINITY;
-            custos[u-1][v-1]= Double.POSITIVE_INFINITY;
+            matriz[u][v]= Double.POSITIVE_INFINITY;
+            custos[u][v]= Double.POSITIVE_INFINITY;
         }
     }
     
@@ -90,7 +90,7 @@ public class GrafoMA{
         if(existeVertice(v)){
             int count= 0;
             for(int i= 0; i<=numVertices; i++){
-                if(matriz[i][v-1] < Double.POSITIVE_INFINITY)
+                if(matriz[i][v] < Double.POSITIVE_INFINITY)
                     count++;
             }
             return count;
@@ -102,7 +102,7 @@ public class GrafoMA{
         if(existeVertice(v)){
             int count= 0;
             for(int i= 0; i<=numVertices; i++){
-                if(matriz[v-1][i] < Double.POSITIVE_INFINITY)
+                if(matriz[v][i] < Double.POSITIVE_INFINITY)
                     count++;
             }
             return count;

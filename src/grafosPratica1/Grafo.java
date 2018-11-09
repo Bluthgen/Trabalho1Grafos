@@ -16,7 +16,7 @@ public abstract class Grafo {
     
     //public abstract int calculaGrau(Integer v);
     
-    public abstract void removeVertice(Integer v);
+    //public abstract void removeVertice(Integer v);
     
     public abstract void removeAresta(Integer u, Integer v);
     

@@ -2,10 +2,7 @@ package grafosPratica1;
 
 //package grafospratica1;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class GrafoLA extends Grafo{
     private Map<Vertice, List<Aresta>> vertices;
@@ -16,14 +13,14 @@ public class GrafoLA extends Grafo{
 
     public boolean existeVertice(Integer v){
         for(Vertice vertice: vertices.keySet())
-            if(vertice.id == v)
+            if(vertice.id.equals(v))
                 return true;
         return false;
     }
     
     public Vertice getVertice(Integer v){
         for(Vertice vertice: vertices.keySet())
-            if(vertice.id == v)
+            if(vertice.id.equals(v))
                 return vertice;
         return null;
     }
@@ -38,17 +35,28 @@ public class GrafoLA extends Grafo{
             System.out.print("\n");
         }
     }
+
+    public void mostrarCustos(){
+        for(Vertice v : vertices.keySet()){
+            System.out.print(v.id+" - "+v.d);
+        }
+    }
     
     public void insereVertice(Integer v){
+        for(int i= 0; i<v; i++){
+            vertices.put(new Vertice(i), new ArrayList<>());
+        }
+        /*
         if(!existeVertice(v)){
             vertices.put(new Vertice(v), new ArrayList<Aresta>());
         }
+        */
     }
     
     public boolean existeAresta(Integer u, Integer v){
         if(existeVertice(u)){
             for(Aresta adj : vertices.get(getVertice(u))){
-                if(adj.vertice == v){
+                if(adj.vertice.equals(v)){
                     return true;
                 }
             }
@@ -118,6 +126,22 @@ public class GrafoLA extends Grafo{
             vertV.pred = u;
         }
     }
+
+    public void dijkstra(Integer s){
+        Queue<Vertice> fila= new PriorityQueue<>();
+        //Set<Vertice> verificado= new HashSet<>();
+        Vertice atual;
+        for(int i= 0; i<vertices.size(); i++){
+            fila.add(getVertice(i));
+        }
+        while(!fila.isEmpty()){
+            atual= fila.remove();
+            //verificado.add(atual);
+            for(Aresta a : vertices.get(atual)){
+                relax(atual.id , a.vertice, a.peso);
+            }
+        }
+    }
     /*
     public GrafoLA calculaTransposto(){
         GrafoLA trans = new GrafoLA();
@@ -160,7 +184,7 @@ public class GrafoLA extends Grafo{
         }
     }
     
-    private class Vertice{
+    private class Vertice implements Comparable<Vertice>{
         Integer id;
         Double d;
         Integer pred;
@@ -170,8 +194,16 @@ public class GrafoLA extends Grafo{
             this.d = Double.POSITIVE_INFINITY;
             this.pred = null;
         }
-        
-        
+
+        @Override
+        public int compareTo(Vertice o) {
+            if(this.id < o.id)
+                return -1;
+            else if(this.id > o.id){
+                return 1;
+            }
+            return 0;
+        }
     }
 }
 
