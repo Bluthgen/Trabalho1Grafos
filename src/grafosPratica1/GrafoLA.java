@@ -38,7 +38,7 @@ public class GrafoLA extends Grafo{
 
     public void mostrarCustos(){
         for(Vertice v : vertices.keySet()){
-            System.out.print(v.id+" - "+v.d);
+            System.out.println(v.id+" - "+v.d);
         }
     }
     
@@ -112,7 +112,7 @@ public class GrafoLA extends Grafo{
         }
     }
     
-    public void initGraph(Integer u){
+    public void initMinPath(Integer u){
         Vertice vert= getVertice(u);
         vert.d = 0.0;
     }
@@ -121,6 +121,7 @@ public class GrafoLA extends Grafo{
     public void relax(Integer u, Integer v, Double w){
         Vertice vertU= getVertice(u);
         Vertice vertV= getVertice(v);
+
         if(vertV.d > vertU.d + w){
             vertV.d = vertU.d + w;
             vertV.pred = u;
@@ -131,6 +132,7 @@ public class GrafoLA extends Grafo{
         Queue<Vertice> fila= new PriorityQueue<>();
         //Set<Vertice> verificado= new HashSet<>();
         Vertice atual;
+        initMinPath(0);
         for(int i= 0; i<vertices.size(); i++){
             fila.add(getVertice(i));
         }
