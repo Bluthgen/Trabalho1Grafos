@@ -1,10 +1,9 @@
 package grafosPratica1;
 
 public class GrafoMA extends Grafo{
-    private Double[][] matriz;
+    private Double[][] matriz, custos;
+    private int[][] caminho;
     private int numVertices;
-    
-    private Double[][] custos;
     
     public GrafoMA(){
         this.numVertices= 0;
@@ -27,6 +26,7 @@ public class GrafoMA extends Grafo{
             this.numVertices= v;
             matriz= new Double[v][v];
             custos= new Double[v][v];
+            caminho= new int[v][v];
             for(int i= 0; i<v; i++){
                 for(int j= 0; j<v; j++){
                     if(i == j){
@@ -35,6 +35,7 @@ public class GrafoMA extends Grafo{
                     }else{
                         matriz[i][j]= Double.POSITIVE_INFINITY;
                         custos[i][j]= Double.POSITIVE_INFINITY;
+                        caminho[i][j]= Integer.MAX_VALUE;
                     }
                 }
             }
@@ -60,11 +61,36 @@ public class GrafoMA extends Grafo{
             System.out.print("\n");
         }
     }
-    
+
+    private void mostraMinimos(int i, int j){
+        if(i == j){
+            System.out.println(i+ " "+ j+ " "+0.0);
+            System.out.println(i);
+            return;
+        }
+        if(custos[i][j] == Double.POSITIVE_INFINITY){
+            System.out.println(i+ " " + j + " inf");
+            System.out.println("Não existe caminho");
+            return;
+        }
+        System.out.println(i + " " + j + " " + custos[i][j]);
+        mostraCaminho(i, j);
+        System.out.println(" ");
+    }
+
+    private void mostraCaminho(int i, int j){
+        if(caminho[i][j] == i || caminho[i][j] == Integer.MAX_VALUE){
+            System.out.print(i);
+            return;
+        }
+        mostraCaminho(i, caminho[i][j]);
+        System.out.print("->"+j);
+    }
+
     public void mostrarCustos(){
         for(int i= 0; i < numVertices; i++){
             for(int j= 0; j < numVertices; j++){
-                System.out.println((i) + "->" + (j)+": "+custos[i][j]);
+                mostraMinimos(i, j);
             }
         }
     }
@@ -76,6 +102,7 @@ public class GrafoMA extends Grafo{
             }
             matriz[u][v]= peso;
             custos[u][v]= peso;
+            caminho[u][v]= u;
         }
     }
     
@@ -83,6 +110,7 @@ public class GrafoMA extends Grafo{
         if(existeVertice(u) && existeVertice(v)){
             matriz[u][v]= Double.POSITIVE_INFINITY;
             custos[u][v]= Double.POSITIVE_INFINITY;
+            caminho[u][v]= Integer.MAX_VALUE;
         }
     }
     
@@ -114,7 +142,10 @@ public class GrafoMA extends Grafo{
         for(int i= 0; i<numVertices; i++){
             for(int j= 0; j<numVertices; j++){
                 for(int k= 0; k<numVertices; k++){
-                    custos[i][j]= Math.min(custos[i][j], custos[i][k] + custos[k][j]);
+                    if(custos[i][j] > custos[i][k] + custos[k][j]){
+                        custos[i][j]=  custos[i][k] + custos[k][j];
+                        caminho[i][j]= k;
+                    }
                 }
             }
         }

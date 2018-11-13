@@ -104,9 +104,33 @@ public class GrafoLVLA extends Grafo{
         }
     }
 
-    public void mostrarCustos(){
-        for(int i=0; i<numVerices; i++){//for(Vertice v: vertices){
-            System.out.println("V: "+vertices[i].id+" - "+vertices[i].d);
+    private void printMinimo(Vertice u, Vertice v){
+        //Vertice v= getVertice(adj.vertice);
+        if(v.d == Double.POSITIVE_INFINITY){
+            printNaoCaminho(u, v);
+        }
+        System.out.println(u.id + " " + v.id + " " + v.d);
+        printCaminho(u, v);
+        System.out.println(" ");
+    }
+
+    private void printNaoCaminho(Vertice u, Vertice v){
+        System.out.println(u.id + " " + v.id + " inf");
+        System.out.println("Não existe caminho");
+    }
+
+    private void printCaminho(Vertice u, Vertice v){
+        if(u.equals(v) || v.pred < 0) {
+            System.out.print(v.id);
+            return;
+        }
+        printCaminho(u, getVertice(v.pred));
+        System.out.print("->"+v.id);
+    }
+
+    public void mostrarCustos(int s){
+        for(Vertice v : vertices){
+            printMinimo(getVertice(s), v);
         }
     }
 
